@@ -7,6 +7,8 @@ import pageObjects.LoginPage;
 import pageObjects.SearchCustomerPage;
 import org.apache.log4j.Logger;
 
+import java.util.Properties;
+
 public class Base {
 
     public WebDriver driver;
@@ -14,6 +16,7 @@ public class Base {
     public AddCustomerPage add_cp;
     public SearchCustomerPage search_cp;
     public static Logger logger;
+    public Properties configProp;
 
 
     //Created for generated random string for EmailID

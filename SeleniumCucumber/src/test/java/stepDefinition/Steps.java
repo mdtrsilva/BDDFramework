@@ -1,30 +1,58 @@
 package stepDefinition;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import pageObjects.AddCustomerPage;
 import pageObjects.LoginPage;
 import pageObjects.SearchCustomerPage;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 import static java.lang.Thread.*;
 
 public class Steps extends Base{
 
+    @Before
+    public void setup() throws IOException {
 
 
-    @Given("launch the chrome browser")
-    public void launch_the_chrome_browser() {
+
+        configProp=new Properties();
+        FileInputStream configPropfile=new FileInputStream("config.properties");
+        configProp.load(configPropfile);
 
         logger= Logger.getLogger("nonCommerce"); //Added logger
         PropertyConfigurator.configure("Log4j.properties");//Added logger
 
-        System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") +"//Drivers/chromedriver");
-                //"/Users/tharindu/IdeaProjects/SeleniumCucumber/Drivers/chromedriver");
-        driver=new ChromeDriver();
+        String browser=configProp.getProperty("browser");
+        if(browser.equals("chrome")){
+            //System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir") +"//Drivers/chromedriver");
+            System.out.println("PATH:" + configProp.getProperty("chromepath"));
+            System.setProperty("webdriver.chrome.driver",configProp.getProperty("chromepath"));
+            driver=new ChromeDriver();
+        }
+        if(browser.equals("firefox")){
+            System.setProperty("webdriver.gecko.driver",configProp.getProperty("firefoxpath"));
+
+            driver=new FirefoxDriver();
+        }
+
+    }
+
+    @Given("launch the chrome browser")
+    public void launch_the_chrome_browser() {
+
 
         logger.info("***** Launching browser ******");
         lp=new LoginPage(driver);
